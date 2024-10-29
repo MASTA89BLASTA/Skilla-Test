@@ -1,12 +1,23 @@
-type Call= {
+type Call = {
   id: number;
-  typeCall?: string;
-  time?: string;
-  worker?: string;
-  call?: string;
-  source?: string;
-  grade?: string;
-  durationCall: string;
+  in_out: 0 | 1;
+  date: string;
+  date_notime: string;
+  time: number;
+  person_name: string;
+  person_surname?: string;
+  person_avatar?: string;
+  contact_company?: string;
+  from_number: string;
+  to_number: string;
+  status: string;
+  record?: string;
+  line_name?: string;
+  partner_data?: {
+    id: string;
+    name: string;
+    phone: string;
+  };
 };
 
-export default Call
+export default Call;

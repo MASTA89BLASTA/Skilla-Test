@@ -3,7 +3,10 @@ import type Action from "./types/Action";
 import type State from "./types/State";
 
 export const initState: State = {
-  callsList: [],
+  callsList: {
+    results: [],
+    total_rows: "0",
+  },
 };
 
 function reducer(state: State = initState, action: Action): State {
@@ -11,7 +14,10 @@ function reducer(state: State = initState, action: Action): State {
     case "call/load":
       return {
         ...state,
-        callsList: action.payload,
+        callsList: {
+          results: action.payload.results,
+          total_rows: action.payload.total_rows,
+        },
       };
     default:
       return state;

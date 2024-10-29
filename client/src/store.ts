@@ -5,13 +5,13 @@ import { useDispatch } from "react-redux";
 import callsReducer from "./features/redux/reducer";
 
 const rootReducer = combineReducers({
-  callsReducer,
+  callsList: callsReducer,
 });
 
 const store = createStore(rootReducer, composeWithDevTools());
 export type RootState = ReturnType<typeof store.getState>;
 
 type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppDispatch: () => AppDispatch = () => useDispatch<AppDispatch>();
 
 export default store;

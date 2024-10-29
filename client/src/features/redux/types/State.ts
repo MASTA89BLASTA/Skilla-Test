@@ -1,7 +1,12 @@
-import type Call from './Call';
+import type Call from "./Call";
+
+type CallsListState = {
+  results: Call[];
+  total_rows: string;
+};
 
 type State = {
-  callsList: Call[];
+  callsList: CallsListState; 
 };
 
 export default State;

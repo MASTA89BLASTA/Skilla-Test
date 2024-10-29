@@ -2,7 +2,10 @@ import type Call from "./Call";
 
 type Action = {
   type: "call/load";
-  payload: Call[];
+  payload: {
+    results: Call[];
+    total_rows: string; 
+  };
 };
 
 export default Action;
