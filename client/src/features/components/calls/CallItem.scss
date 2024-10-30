@@ -1,0 +1,46 @@
+.call__item__list {
+  width: 1400px;
+  height: 65px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  // padding: 10px;
+  border-top: 1px solid #eaf0fa;
+  margin-bottom: 10px;
+}
+
+.call__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.call__item--in__out {
+  width: 54px;
+}
+
+.call__item--date, .call__item--time {
+  width: 88px;
+}
+.call__item--avatar {
+  width: 129px;
+}
+
+.call__item--person {
+  width: 325px;
+}
+
+.call__item--to {
+  width: 214px;
+}
+
+.call__item--status {
+  width: 110px;
+}
+
+.call__item--record, .call__item--time__record {
+  width: 461px;
+  display: flex;
+  justify-content: end;
+}

@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import App from "./App/App";
 import store from "./store";
+import "./reset.scss";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <Provider store={store}>
