@@ -10,6 +10,7 @@ type Call = {
   contact_company?: string;
   from_number: string;
   to_number: string;
+  source: string;
   status: string;
   record?: string;
   line_name?: string;

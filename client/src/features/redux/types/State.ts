@@ -1,8 +1,8 @@
 import type Call from "./Call";
 
 type CallsListState = {
-  results: Call[];
   total_rows: string;
+  results: Call[];
 };
 
 type State = {

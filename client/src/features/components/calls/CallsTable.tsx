@@ -30,7 +30,7 @@ function CallsTable(): JSX.Element {
         .loadCalls(token, dateStart, dateEnd, "", limit, offset)
         .then(({ results, total_rows }) => {
           console.log("Звонки:", results);
-          dispatch({ type: "call/load", payload: { results, total_rows } });
+          dispatch({ type: "call/load", payload: {total_rows, results } });
         })
         .catch(error => {
           console.error("Ошибка при загрузке звонков:", error);
@@ -54,6 +54,26 @@ function CallsTable(): JSX.Element {
     setShowMenu(false);
   };
 
+  const fetchDownloadRecord = async (
+    recordId: string,
+    partnershipId: string
+  ): Promise<Blob> => {
+    console.log("Вызов fetchDownloadRecord с аргументами:", recordId, partnershipId);
+    try {
+      const recordBlob = await api.loadCallRecord(token, recordId, partnershipId);
+      const url = URL.createObjectURL(recordBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${recordId}.mp3`;
+      a.click();
+      URL.revokeObjectURL(url);
+      return recordBlob; 
+    } catch (error) {
+      console.error("Ошибка при загрузке записи звонка:", error);
+      throw error;
+    }
+  };
+
   return (
     <div>
       <DatePicker onDateChange={handleDateChange} />
@@ -68,7 +88,7 @@ function CallsTable(): JSX.Element {
                 {displayMode}
                 <button type="button" onClick={handleToggleMenu}>
                   <FontAwesomeIcon
-                    className="calls__table__header__time--icon"
+                    className={`calls__table__header__time--icon ${showMenu ? "rotated" : ''}`}
                     icon={faChevronDown}
                   />
                 </button>
@@ -119,7 +139,12 @@ function CallsTable(): JSX.Element {
             </div>
 
             {callsList.map(call => (
-              <CallItem key={call.id} call={call} displayMode={displayMode} />
+              <CallItem
+                key={call.id}
+                call={call}
+                displayMode={displayMode}
+                onDownloadRecord={fetchDownloadRecord}
+              />
             ))}
           </>
         ) : (

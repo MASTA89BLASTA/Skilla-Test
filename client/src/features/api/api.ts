@@ -50,3 +50,30 @@ export const loadCalls = async (
   const errorData: { message: string } = await response.json();
   throw new Error(errorData.message);
 };
+
+export const loadCallRecord = async (
+  token: string,
+  recordId: string,
+  partnershipId: string
+): Promise<Blob> => {
+  const url = `https://api.skilla.ru/mango/getRecord?record=${encodeURIComponent(recordId)}&partnership_id=${encodeURIComponent(partnershipId)}`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "audio/mpeg, audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3",
+      "Content-Transfer-Encoding": "binary",
+    },
+  });
+
+  console.log("Статус ответа при загрузке записи:", response.status);
+  if (response.ok) {
+    const blob = await response.blob();
+    console.log("Полученный Blob:", blob);
+    return blob;
+  }
+
+  const errorData: { message: string } = await response.json();
+  throw new Error(errorData.message);
+};

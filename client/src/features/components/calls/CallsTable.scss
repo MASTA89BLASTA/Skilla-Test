@@ -29,6 +29,9 @@
   width: 88px;
 }
 .calls__table__header__item--time {
+  display: flex;
+  justify-content: end;
+  align-items: center;
   position: relative;
 }
 .calls__table__header__item--person { 
@@ -53,6 +56,10 @@
 .calls__table__header__time--icon {
   color: #5E7793;
   cursor: pointer;
+  margin-left: 4px;
+}
+.calls__table__header__time--icon.rotated {
+  transform: rotate(180deg);
 }
 
 .calls__table__header__menu {
@@ -68,3 +75,4 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   cursor: pointer;
 }
+
