@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import type Call from "../../redux/types/Call";
 import AudioPlayer from "../../Ui/audioplayer/AudioPlayer";
 import "./CallItem.scss";
+import CallsIcons from "../../Ui/callIcons/CallIcons";
 
 type CallPropsType = {
   call: Call;
@@ -35,7 +36,7 @@ function CallItem({
   return (
     <ul key={call.id} className="call__item__list">
       <li className="call__item call__item--in__out">
-        {call.in_out === 1 ? "Inc" : "Out"}
+        <CallsIcons in_out={call.in_out} status={call.status} />
       </li>
       {displayMode === "Дата" ? (
         <li className="call__item call__item--date">{formattedDate}</li>

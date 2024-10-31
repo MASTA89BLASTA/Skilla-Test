@@ -17,7 +17,7 @@ function AudioPlayer({
 }: AudioPlayerProps): JSX.Element | null {
   console.log("Audio URL:", audioUrl);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0); // для отслеживания времени
+  const [currentTime, setCurrentTime] = useState(0); 
   const [duration, setDuration] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);

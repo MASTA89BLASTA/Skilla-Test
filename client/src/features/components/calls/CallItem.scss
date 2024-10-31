@@ -20,6 +20,7 @@
 
 .call__item--date, .call__item--time {
   width: 88px;
+  color: #122945;
 }
 .call__item--avatar {
   width: 129px;
@@ -27,6 +28,7 @@
 
 .call__item--person {
   width: 325px;
+  color: #122945;
 }
 
 .call__item--to {
@@ -41,4 +43,8 @@
   width: 461px;
   display: flex;
   justify-content: end;
+}
+
+.call__item--time__record {
+  color: #122945;
 }
