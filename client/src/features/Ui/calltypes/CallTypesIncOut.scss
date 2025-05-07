@@ -1,0 +1,30 @@
+.call__types__inc__out--title {
+  font-size: 14px;
+}
+.call__types__inc__out {
+  position: relative;
+  font-size: 12px;
+}
+
+.call__types__inc__out--menu{
+  width: 133px;
+  height: 96px; 
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 70%;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0px 4px 20px 0px #00000014;
+  border-radius: 8px;
+}
+
+.call__types__inc__out--option {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.call__types__inc__out--option:hover {
+  background-color: #DEE4FF;
+}
+.call__types__inc__out--option:first-child {
+  color: #015EF5;
+}

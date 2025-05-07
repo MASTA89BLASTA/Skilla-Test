@@ -86,7 +86,6 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
   return (
     <div>
       <div>
-        <h4>Выбранный диапазон:</h4>
         {selectedRange.startDate && selectedRange.endDate ? (
           <p>
             С {selectedRange.startDate.toLocaleDateString()} по{" "}

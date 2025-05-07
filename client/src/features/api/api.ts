@@ -28,6 +28,7 @@ export const loadCalls = async (
     ...(offset !== undefined ? { offset } : {})
   };
   console.log("Тело запроса (requestBody):", JSON.stringify(requestBody));
+  console.log("Параметры запроса: ", { dateStart, dateEnd, inOut });
 
   const response = await fetch(url, {
     method: "POST",
@@ -43,7 +44,7 @@ export const loadCalls = async (
     console.log(data);
     return {
       results: data.results || [],
-      total_rows: data.total_rows?.toString() || "0",
+      total_rows: data.total_rows || "0",
     };
   }
 
