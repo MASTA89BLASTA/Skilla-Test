@@ -3,9 +3,13 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { useDispatch } from "react-redux";
 
 import callsReducer from "./features/redux/reducer";
+import filtersReducer from "./features/redux/filtersReducer";
+
+
 
 const rootReducer = combineReducers({
   callsList: callsReducer,
+  filters: filtersReducer,
 });
 
 const store = createStore(rootReducer, composeWithDevTools());

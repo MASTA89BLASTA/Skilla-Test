@@ -7,26 +7,35 @@ type LoadCallsResponse = {
   total_rows: string;
 };
 
-export const loadCalls = async (
-  token: string,
-  dateStart: string,
-  dateEnd: string,
-  inOut?: string,
-  limit?: number,
-  offset?: number
-): Promise<LoadCallsResponse> => {
+type LoadCallsParams = {
+  token: string;
+  dateStart: string;
+  dateEnd: string;
+  inOut?: string;
+  limit?: number;
+  offset?: number;
+};
+
+export const loadCalls = async ({
+  token,
+  dateStart,
+  dateEnd,
+  inOut,
+
+}: LoadCallsParams): Promise<LoadCallsResponse> => {
   const url = "https://api.skilla.ru/mango/getList";
 
-  const requestUrl = `${url}?date_start=${encodeURIComponent(dateStart)}&date_end=${encodeURIComponent(dateEnd)}${inOut ? `&in_out=${encodeURIComponent(inOut)}` : ""}`;
-  console.log("Итоговый URL запроса:", requestUrl);
-
-  const requestBody = {
+  const requestBody: Record<string, unknown> = {
     date_start: dateStart,
     date_end: dateEnd,
-    ...(inOut !== undefined ? { in_out: inOut } : {}),
-    ...(limit !== undefined ? { limit } : {}), 
-    ...(offset !== undefined ? { offset } : {})
+    in_out: inOut,
+    limit: 1000,
+    offset: 0,
   };
+  if (inOut !== undefined && inOut !== "") {
+    requestBody.in_out = parseInt(inOut, 10); 
+  }
+
   console.log("Тело запроса (requestBody):", JSON.stringify(requestBody));
   console.log("Параметры запроса: ", { dateStart, dateEnd, inOut });
 
@@ -55,7 +64,7 @@ export const loadCalls = async (
 export const loadCallRecord = async (
   token: string,
   recordId: string,
-  partnershipId: string
+  partnershipId: string,
 ): Promise<Blob> => {
   const url = `https://api.skilla.ru/mango/getRecord?record=${encodeURIComponent(recordId)}&partnership_id=${encodeURIComponent(partnershipId)}`;
 

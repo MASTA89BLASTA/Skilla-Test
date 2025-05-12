@@ -8,6 +8,9 @@ import DatePicker from "../../Ui/datepicker/DatePicker";
 import "./CallsTable.scss";
 import CallTypesIncOut from "../../Ui/calltypes/CallTypesIncOut";
 import Arrow from "../../Ui/arrows/Arrow";
+import { setInOut } from "../../redux/types/ActionFilters";
+
+import { filterCalls } from "../../utils/FilterCalls";
 
 function CallsTable(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -15,54 +18,48 @@ function CallsTable(): JSX.Element {
   const [dateStart, setDateStart] = useState<string | null>(null);
   const [dateEnd, setDateEnd] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
-  const [callType, setCallType] = useState(""); 
+  // const [callType, setCallType] = useState<string>("Все типы");
   const [displayMode, setDisplayMode] = useState("Время");
   const limit = 1000;
   const offset = 0;
 
-  const callsList: Call[] = useSelector(
-    (state: RootState) => state.callsList.results
-  );
-  
-
+  const callsList: Call[] = useSelector((state: RootState) => state.callsList.results);
+  const inOut = useSelector((state: RootState) => state.filters.inOut);
+  console.log("callsList из Redux:", callsList);
   useEffect(() => {
-    if (dateStart && dateEnd) {
-      console.log("Вызов API с параметрами:", dateStart, dateEnd);
-      const inOutValue = (() => {
-        switch (callType) {
-          case "Входящие":
-            return "1";
-          case "Исходящие":
-            return "0";
-          default:
-            return "";
-        }
-      })();
-      api
-        .loadCalls(token, dateStart, dateEnd, inOutValue, limit, offset)
-        .then(({ results, total_rows }) => {
-          console.log("Звонки:", results);
-          dispatch({ type: "call/load", payload: { total_rows: parseInt(total_rows, 10), results } });
-        })
-        .catch(error => {
-          console.error("Ошибка при загрузке звонков:", error);
-        });
-    }
-  }, [dateStart, dateEnd, callType]);
+    if (!dateStart || !dateEnd) return;
 
-  
+    const params = {
+      token,
+      dateStart,
+      dateEnd,
+      inOut: inOut !== "" ? String(inOut) : undefined,
+      limit,
+      offset,
+    };
 
-  const handleDateChange = (
-    startDate: string | null,
-    endDate: string | null
-  ): void => {
+    api
+      .loadCalls(params)
+      .then(({ results, total_rows }) => {
+        dispatch({ type: "call/load", payload: { total_rows: parseInt(total_rows, 10), results } });
+      })
+      .catch(console.error);
+  }, [dateStart, dateEnd, inOut, dispatch]);
+
+  const handleDateChange = (startDate: string | null, endDate: string | null): void => {
     console.log("Новый диапазон дат:", startDate, endDate);
     setDateStart(startDate);
     setDateEnd(endDate);
   };
 
   const handleTypeSelect = (type: string): void => {
-    setCallType(type);
+    if (type === "Входящие") {
+      dispatch(setInOut(1));
+    } else if (type === "Исходящие") {
+      dispatch(setInOut(0));
+    } else {
+      dispatch(setInOut(""));
+    }
   };
 
   const handleToggleMenu = (): void => setShowMenu(!showMenu);
@@ -72,21 +69,10 @@ function CallsTable(): JSX.Element {
     setShowMenu(false);
   };
 
-  const fetchDownloadRecord = async (
-    recordId: string,
-    partnershipId: string
-  ): Promise<Blob> => {
-    console.log(
-      "Вызов fetchDownloadRecord с аргументами:",
-      recordId,
-      partnershipId
-    );
+  const fetchDownloadRecord = async (recordId: string, partnershipId: string): Promise<Blob> => {
+    console.log("Вызов fetchDownloadRecord с аргументами:", recordId, partnershipId);
     try {
-      const recordBlob = await api.loadCallRecord(
-        token,
-        recordId,
-        partnershipId
-      );
+      const recordBlob = await api.loadCallRecord(token, recordId, partnershipId);
       const url = URL.createObjectURL(recordBlob);
       const a = document.createElement("a");
       a.href = url;
@@ -100,6 +86,8 @@ function CallsTable(): JSX.Element {
     }
   };
 
+  const filteredCalls = filterCalls(callsList, dateStart, dateEnd, inOut);
+
   return (
     <div className="calls__table__header__wrapper">
       <div className="calls__table__header__types">
@@ -108,7 +96,7 @@ function CallsTable(): JSX.Element {
       </div>
       <div className="calls__table__wrapper">
         <div className="calls__table">
-          {callsList.length ? (
+          {filteredCalls.length ? (
             <>
               <div className="calls__table__header">
                 <span className="calls__table__header__item calls__table__header__item--type">
@@ -116,7 +104,7 @@ function CallsTable(): JSX.Element {
                 </span>
                 <span className="calls__table__header__item calls__table__header__item--time">
                   {displayMode}
-                  <Arrow isOpen={showMenu} onClick={handleToggleMenu}/>
+                  <Arrow isOpen={showMenu} onClick={handleToggleMenu} />
                   {showMenu && (
                     <div className="calls__table__header__menu">
                       <div
@@ -127,8 +115,7 @@ function CallsTable(): JSX.Element {
                           if (e.key === "Enter" || e.key === " ") {
                             handleMenuOptionClick("Время");
                           }
-                        }}
-                      >
+                        }}>
                         Время
                       </div>
                       <div
@@ -139,8 +126,7 @@ function CallsTable(): JSX.Element {
                           if (e.key === "Enter" || e.key === " ") {
                             handleMenuOptionClick("Дата");
                           }
-                        }}
-                      >
+                        }}>
                         Дата
                       </div>
                     </div>
@@ -163,17 +149,19 @@ function CallsTable(): JSX.Element {
                 </span>
               </div>
 
-              {callsList.map(call => (
-                <CallItem
-                  key={call.id}
-                  call={call}
-                  displayMode={displayMode}
-                  onDownloadRecord={fetchDownloadRecord}
-                />
-              ))}
+              <div className="calls__table__group-title">
+                {filteredCalls.map(call => (
+                  <CallItem
+                    key={call.id}
+                    call={call}
+                    displayMode={displayMode}
+                    onDownloadRecord={fetchDownloadRecord}
+                  />
+                ))}
+              </div>
             </>
           ) : (
-            <p>Звонков нет</p>
+            <p className="calls__table__empty">Звонков нет</p>
           )}
         </div>
       </div>

@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/default-param-last */
 import type Action from "./types/Action";
-import type State from "./types/State";
+import type Call from "./types/Call";
+
+type State = {
+  total_rows: number;
+  results: Call[]; 
+};
 
 export const initState: State = {
     total_rows: 0,
-    results: [],
+    results: [] as Call[],
 };
 
 function reducer(state: State = initState, action: Action): State {
