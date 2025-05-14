@@ -3,6 +3,7 @@ import type Call from "../../redux/types/Call";
 import AudioPlayer from "../../Ui/audioplayer/AudioPlayer";
 import "./CallItem.scss";
 import CallsIcons from "../../Ui/callIcons/CallIcons";
+import Avatars from "../../Ui/avatars/Avatars";
 
 type CallPropsType = {
   call: Call;
@@ -43,11 +44,7 @@ function CallItem({
       ) : (
         <li className="call__item call__item--time">{formattedTime}</li>
       )}
-      {call.person_avatar && (
-        <li className="call__item call__item--avatar">
-          <img src={call.person_avatar} alt={`${call.person_name}`} />
-        </li>
-      )}
+      <Avatars call={call} />
       <li className="call__item call__item--person">
         {/* {call.partner_data?.name || call.partner_data?.phone} */}
         {call.partner_data?.phone}
