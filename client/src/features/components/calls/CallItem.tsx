@@ -4,6 +4,7 @@ import AudioPlayer from "../../Ui/audioplayer/AudioPlayer";
 import "./CallItem.scss";
 import CallsIcons from "../../Ui/callIcons/CallIcons";
 import Avatars from "../../Ui/avatars/Avatars";
+import Grades from "../../Ui/grades/Grades";
 
 type CallPropsType = {
   call: Call;
@@ -51,7 +52,7 @@ function CallItem({
       </li>
       {/* <div>From: {call.from_number}</div> */}
       <li className="call__item call__item--to">To: {call.source}</li>
-      <li className="call__item call__item--status">Оценка</li>
+      <Grades />
       {call.record ? (
         <li className="call__item call__item--record">
         <AudioPlayer 

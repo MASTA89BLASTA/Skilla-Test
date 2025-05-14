@@ -1,0 +1,40 @@
+.call__item--status {
+  display: flex;
+  justify-content: start;
+}
+
+.call__item--grade {
+  
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  border: 1px solid transparent;
+}
+
+
+.grade--bad {
+  width: 55px;
+  height: 26px;
+  background-color: #FEE9EF;
+  border-color: #EA1A4F;
+  color: #EA1A4F
+}
+
+.grade--good {
+  width: 66px;
+  height: 26px;
+  background-color: #D8E4FB;
+  border-color: #ADBFDF;
+  color: #122945
+}
+
+.grade--excellent {
+  width: 70px;
+  height: 26px;
+  background-color: #DBF8EF;
+  border-color: #28A879;
+  color: #28A879
+}
