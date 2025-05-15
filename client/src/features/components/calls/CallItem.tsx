@@ -5,6 +5,7 @@ import "./CallItem.scss";
 import CallsIcons from "../../Ui/callIcons/CallIcons";
 import Avatars from "../../Ui/avatars/Avatars";
 import Grades from "../../Ui/grades/Grades";
+import Telephone from "../../Ui/telephone/Telephone";
 
 type CallPropsType = {
   call: Call;
@@ -46,10 +47,8 @@ function CallItem({
         <li className="call__item call__item--time">{formattedTime}</li>
       )}
       <Avatars call={call} />
-      <li className="call__item call__item--person">
-        {/* {call.partner_data?.name || call.partner_data?.phone} */}
-        {call.partner_data?.phone}
-      </li>
+      <Telephone call={call} />
+      
       {/* <div>From: {call.from_number}</div> */}
       <li className="call__item call__item--to">To: {call.source}</li>
       <Grades />

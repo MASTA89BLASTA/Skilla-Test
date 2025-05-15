@@ -1,5 +1,8 @@
 .datepiker__slider {
   width: 115px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
 }
 .datepiker__slider__arrow {
   color: #ADBFDF;
@@ -8,6 +11,30 @@
   background-color: transparent;
 }
 
-.datepiker__slider__icon {
-  color: #ADBFDF;
+.datepiker__slider__arrow:hover {
+  color: #002CFB;
 }
+
+.datepiker__slider__calendar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.datepiker__slider__icon {
+  fill: #ADBFDF;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.datepiker__slider__icon:hover {
+  fill: #002CFB;
+}
+
+.dropdown {
+  cursor: pointer;
+}
+
+.datepiker__slider__label {
+  color: #002CFB;
+}
+

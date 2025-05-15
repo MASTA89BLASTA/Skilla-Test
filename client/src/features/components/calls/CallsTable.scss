@@ -38,6 +38,8 @@
   align-items: center;
 }
 
+
+
 .calls__table__header__item--type {
   width: 54px;
 }
@@ -46,19 +48,27 @@
 }
 .calls__table__header__item--time {
   display: flex;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
   position: relative;
+  cursor: pointer;
+  padding-left: 22px;
 }
+
 .calls__table__header__item--person { 
   width: 129px;
+  padding-left: 25px;
 }
 
 .calls__table__header__item--call {
   width: 325px;
 }
+.calls__table__header__item--call-text {
+  margin-right: 75px;
+}
 .calls__table__header__item--source {
   width: 214px;
+  padding-right: 20px;
 }
 .calls__table__header__item--rating {
   width: 110px;

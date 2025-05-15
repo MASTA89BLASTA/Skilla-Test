@@ -13,23 +13,23 @@ type AvatarsProps = {
 
 const Avatars = ({ call }: AvatarsProps): JSX.Element => {
   const randomAvatars = React.useMemo(() => {
-    const imgArray = [Img1, Img2, Img3]; 
+    const imgArray = [Img1, Img2, Img3];
     return getRandomItems(imgArray, 1);
   }, []);
   return (
-    <li className="call__item call__item--status">
+    <div className="call__avatar">
       {call.person_avatar ? (
         randomAvatars.map(avatar => (
-          <li key={avatar} className="call__item call__item--avatar">
+          <li key={avatar} className="call__item--avatar">
             <img src={avatar} alt={`${call.person_name}`} />
           </li>
         ))
       ) : (
-        <li className="call__item call__item--avatar">
+        <li className="call__item--avatar">
           <img src={ImgDefault} alt={`${call.person_name}`} />
         </li>
       )}
-    </li>
+    </div>
   );
 };
 

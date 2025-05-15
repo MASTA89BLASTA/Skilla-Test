@@ -8,6 +8,11 @@
   border-top: 1px solid #eaf0fa;
 }
 
+.call__item__list:hover {
+  background-color: #d4dff32b;
+  cursor: pointer;
+}
+
 .call__item {
   display: flex;
   justify-content: center;
@@ -18,7 +23,8 @@
   width: 54px;
 }
 
-.call__item--date, .call__item--time {
+.call__item--date,
+.call__item--time {
   width: 88px;
   color: #122945;
 }
@@ -33,13 +39,18 @@
 
 .call__item--to {
   width: 214px;
+  padding-right: 20px;
 }
 
 .call__item--status {
   width: 110px;
+  display: flex;
+  justify-content: start;
+  padding-left: 30px;
 }
 
-.call__item--record, .call__item--time__record {
+.call__item--record,
+.call__item--time__record {
   width: 461px;
   display: flex;
   justify-content: end;

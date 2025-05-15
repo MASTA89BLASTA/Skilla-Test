@@ -3,11 +3,7 @@
 import React, { useEffect, useState } from "react";
 import "./DatePicker.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faCalendar
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import type DateRange from "./DateRange";
 
 type DatePickerProps = {
@@ -41,35 +37,26 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
     setSelectedRange({ startDate, endDate });
     setCurrentPresetIndex(index);
     setCustomRangeInput("");
-    onDateChange(
-      startDate.toISOString().split("T")[0],
-      endDate.toISOString().split("T")[0]
-    );
+    onDateChange(startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]);
   };
 
   useEffect(() => {
     setPresetRange(0);
   }, []);
 
-  const handleCustomRangeChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const handleCustomRangeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target;
     setCustomRangeInput(value);
 
     const [start, end] = value.split(" - ");
-    const isValidDate = (date: string): boolean =>
-      /^\d{2}\.\d{2}\.\d{4}$/.test(date);
+    const isValidDate = (date: string): boolean => /^\d{2}\.\d{2}\.\d{4}$/.test(date);
 
     if (isValidDate(start) && isValidDate(end)) {
       const startDate = new Date(start.split(".").reverse().join("-"));
       const endDate = new Date(end.split(".").reverse().join("-"));
 
       setSelectedRange({ startDate, endDate });
-      onDateChange(
-        startDate.toISOString().split("T")[0],
-        endDate.toISOString().split("T")[0]
-      );
+      onDateChange(startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]);
     } else {
       setSelectedRange({ startDate: null, endDate: null });
     }
@@ -85,7 +72,7 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
 
   return (
     <div>
-      <div>
+      <div style={{ display: "none" }}>
         {selectedRange.startDate && selectedRange.endDate ? (
           <p>
             С {selectedRange.startDate.toLocaleDateString()} по{" "}
@@ -96,18 +83,34 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
         )}
       </div>
       <div className="datepiker__slider" style={{ display: "flex", alignItems: "center" }}>
-        <button className="datepiker__slider__arrow" type="button" onClick={() => handleSliderChange("left")}>
+        <button
+          className="datepiker__slider__arrow"
+          type="button"
+          onClick={() => handleSliderChange("left")}>
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
         <span
+          className="datepiker__slider__calendar"
+          tabIndex={0}
           role="button"
-          onClick={() => setDropdownOpen(!isDropdownOpen)}
-          style={{ margin: "0 10px" }}
-        >
-          <FontAwesomeIcon icon={faCalendar} className="datepiker__slider__icon"/>
-          {PRESET_RANGES[currentPresetIndex].label}
+          onClick={() => setDropdownOpen(!isDropdownOpen)}>
+          <svg
+            className="datepiker__slider__icon"
+            width="16"
+            height="18"
+            viewBox="0 0 16 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.4 1.63636H13.6V0H12V1.63636H4V0H2.4V1.63636H1.6C0.72 1.63636 0 2.37273 0 3.27273V16.3636C0 17.2636 0.72 18 1.6 18H14.4C15.28 18 16 17.2636 16 16.3636V3.27273C16 2.37273 15.28 1.63636 14.4 1.63636ZM14.4 16.3636H1.6V5.72727H14.4V16.3636Z" />
+          </svg>
+          <span className="datepiker__slider__label">
+            {PRESET_RANGES[currentPresetIndex].label}
+          </span>
         </span>
-        <button className="datepiker__slider__arrow" type="button" onClick={() => handleSliderChange("right")}>
+        <button
+          className="datepiker__slider__arrow"
+          type="button"
+          onClick={() => handleSliderChange("right")}>
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
       </div>
@@ -119,8 +122,7 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
                 key={range.label}
                 role="button"
                 tabIndex={0}
-                onClick={() => setPresetRange(index)}
-              >
+                onClick={() => setPresetRange(index)}>
                 {range.label}
               </li>
             ))}

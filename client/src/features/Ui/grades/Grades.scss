@@ -1,11 +1,7 @@
-.call__item--status {
-  display: flex;
-  justify-content: start;
-}
+
 
 .call__item--grade {
-  
-  padding: 4px 8px;
+  padding: 5px 7px;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
@@ -32,7 +28,7 @@
 }
 
 .grade--excellent {
-  width: 70px;
+  width: 75px;
   height: 26px;
   background-color: #DBF8EF;
   border-color: #28A879;

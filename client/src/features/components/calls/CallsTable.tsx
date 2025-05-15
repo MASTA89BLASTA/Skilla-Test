@@ -136,7 +136,7 @@ function CallsTable(): JSX.Element {
                   Сотрудник
                 </span>
                 <span className="calls__table__header__item calls__table__header__item--call">
-                  Звонок
+                  <span className="calls__table__header__item--call-text">Звонок</span>
                 </span>
                 <span className="calls__table__header__item calls__table__header__item--source">
                   Источник
