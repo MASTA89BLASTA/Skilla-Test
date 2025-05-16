@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch, type RootState } from "../../../store";
 import type Call from "../../redux/types/Call";
@@ -15,18 +15,18 @@ import { filterCalls } from "../../utils/FilterCalls";
 function CallsTable(): JSX.Element {
   const dispatch = useAppDispatch();
   const token = "testtoken";
-  const [dateStart, setDateStart] = useState<string | null>(null);
-  const [dateEnd, setDateEnd] = useState<string | null>(null);
-  const [showMenu, setShowMenu] = useState(false);
-  // const [callType, setCallType] = useState<string>("Все типы");
-  const [displayMode, setDisplayMode] = useState("Время");
+  const [dateStart, setDateStart] = React.useState<string | null>(null);
+  const [dateEnd, setDateEnd] = React.useState<string | null>(null);
+  const [showMenu, setShowMenu] = React.useState(false);
+  const [displayMode, setDisplayMode] = React.useState("Время");
   const limit = 1000;
   const offset = 0;
 
   const callsList: Call[] = useSelector((state: RootState) => state.callsList.results);
   const inOut = useSelector((state: RootState) => state.filters.inOut);
   console.log("callsList из Redux:", callsList);
-  useEffect(() => {
+  
+  React.useEffect(() => {
     if (!dateStart || !dateEnd) return;
 
     const params = {
@@ -69,8 +69,16 @@ function CallsTable(): JSX.Element {
     setShowMenu(false);
   };
 
+  const fetchAudioBlob = async (recordId: string, partnershipId: string): Promise<Blob> => {
+    try {
+      return await api.loadCallRecord(token, recordId, partnershipId);
+    } catch (error) {
+      console.error("Ошибка при получении записи:", error);
+      throw error;
+    }
+  };
+
   const fetchDownloadRecord = async (recordId: string, partnershipId: string): Promise<Blob> => {
-    console.log("Вызов fetchDownloadRecord с аргументами:", recordId, partnershipId);
     try {
       const recordBlob = await api.loadCallRecord(token, recordId, partnershipId);
       const url = URL.createObjectURL(recordBlob);
@@ -81,7 +89,7 @@ function CallsTable(): JSX.Element {
       URL.revokeObjectURL(url);
       return recordBlob;
     } catch (error) {
-      console.error("Ошибка при загрузке записи звонка:", error);
+      console.error("Ошибка при скачивании записи звонка:", error);
       throw error;
     }
   };
@@ -155,6 +163,7 @@ function CallsTable(): JSX.Element {
                     key={call.id}
                     call={call}
                     displayMode={displayMode}
+                    onGetAudioBlob={fetchAudioBlob}
                     onDownloadRecord={fetchDownloadRecord}
                   />
                 ))}

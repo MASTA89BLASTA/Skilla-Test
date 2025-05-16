@@ -1,57 +1,85 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import "./AudioPlayer.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
-// import Call from '../../redux/types/Call';
 
 type AudioPlayerProps = {
   audioUrl: string;
   onDownloadRecord: () => Promise<void>;
+  onHidePlayer: () => void;
+  onPlayInit: () => Promise<void>;
   formattedCallTime: string;
 };
 
 function AudioPlayer({
   audioUrl,
   onDownloadRecord,
+  onPlayInit,
   formattedCallTime,
+  onHidePlayer,
 }: AudioPlayerProps): JSX.Element | null {
   console.log("Audio URL:", audioUrl);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0); 
-  const [duration, setDuration] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
+  const [isVisible, setIsVisible] = React.useState(true);
+  const audioRef = React.useRef<HTMLAudioElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const audio = audioRef.current;
     if (audio) {
       const updateProgress = (): void => setCurrentTime(audio.currentTime);
+      const updateDuration = (): void => setDuration(audio.duration);
       audio.addEventListener("timeupdate", updateProgress);
-      audio.addEventListener("loadedmetadata", () => {
-        setDuration(audio.duration);
-      });
+      audio.addEventListener("loadedmetadata", updateDuration);
       return () => {
         audio.removeEventListener("timeupdate", updateProgress);
+        audio.removeEventListener("loadedmetadata", updateDuration);
       };
     }
   }, []);
 
-  const togglePlay = (): void => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current
-          .play()
-          .catch(e => console.error("ошибка воспроизведения", e));
-      }
-      setIsPlaying(!isPlaying);
-    } else {
-      console.error(
-        "Невозможно воспроизвести: audioUrl отсутствует или некорректен"
-      );
+  const togglePlay = async (): Promise<void> => {
+  try {
+    const audio = audioRef.current;
+
+    if (!audioUrl) {
+      await onPlayInit();
+
+      setTimeout(() => {
+        const updatedAudio = audioRef.current;
+        if (updatedAudio) {
+          updatedAudio.play().catch(console.error);
+          setIsPlaying(true);
+        }
+      }, 200); 
+
+      return;
     }
-  };
+
+    if (!audio) return;
+
+    if (!isPlaying) {
+      if (audio.readyState < 4) {
+        await new Promise<void>((resolve) => {
+          const handleCanPlay = (): void => {
+            audio.removeEventListener("canplaythrough", handleCanPlay);
+            resolve();
+          };
+          audio.addEventListener("canplaythrough", handleCanPlay);
+          setTimeout(() => resolve(), 1000);
+        });
+      }
+      await audio.play();
+    } else {
+      audio.pause();
+    }
+
+    setIsPlaying(!isPlaying);
+  } catch (error) {
+    console.error("Ошибка при воспроизведении:", error);
+  }
+};
 
   const handleDownload = async (): Promise<void> => {
     await onDownloadRecord();
@@ -67,6 +95,7 @@ function AudioPlayer({
 
   const handleHidePlayer = (): void => {
     setIsVisible(false);
+    onHidePlayer();
   };
 
   const progress = (currentTime / duration) * 100 || 0;
@@ -129,7 +158,6 @@ function AudioPlayer({
           onClick={handleHidePlayer}
           aria-label="Hide Player"
         >
-          {/* <FontAwesomeIcon className="audio__player__controls__hide" icon={faTimes}/> */}
           <svg
             width="14"
             height="16"

@@ -10,24 +10,41 @@ import Telephone from "../../Ui/telephone/Telephone";
 type CallPropsType = {
   call: Call;
   displayMode: string;
+  onGetAudioBlob: (recordId: string, partnershipId: string) => Promise<Blob>;
   onDownloadRecord: (recordId: string, partnershipId: string) => Promise<Blob>;
 };
 
 function CallItem({
   call,
   displayMode,
+  onGetAudioBlob,
   onDownloadRecord,
 }: CallPropsType): JSX.Element {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isPlayerVisible, setIsPlayerVisible] = useState(true);
 
-  const handleDownloadRecord = async (): Promise<void> => {
-    if (call.record && call.partner_data?.id) {
-      const blob = await onDownloadRecord(call.record, call.partner_data.id); 
-      const fileUrl = URL.createObjectURL(blob); 
-      console.log("Audio file URL:", fileUrl);
-      setAudioUrl(fileUrl); 
+  const handlePlayInit = async (): Promise<void> => {
+    if (!audioUrl && call.record && call.partner_data?.id) {
+      try {
+        const blob = await onGetAudioBlob(call.record, call.partner_data.id);
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+      } catch (error) {
+        console.error("Ошибка при загрузке аудио:", error);
+      }
     }
   };
+
+  const handleDownload = async (): Promise<void> => {
+    if (call.record && call.partner_data?.id) {
+      try {
+        await onDownloadRecord(call.record, call.partner_data.id);
+      } catch (error) {
+        console.error("Ошибка при скачивании:", error);
+      }
+    }
+  };
+
   const [datePart, timePart] = call.date.split(" ");
   const formattedDate = datePart.split("-").reverse().join(".");
   const formattedTime = timePart.slice(0, 5);
@@ -48,22 +65,37 @@ function CallItem({
       )}
       <Avatars call={call} />
       <Telephone call={call} />
-      
-      {/* <div>From: {call.from_number}</div> */}
       <li className="call__item call__item--to">To: {call.source}</li>
       <Grades />
       {call.record ? (
         <li className="call__item call__item--record">
-        <AudioPlayer 
-          audioUrl={audioUrl || ""} 
-          onDownloadRecord={handleDownloadRecord} 
-          formattedCallTime={formattedCallTime}
-        />
-      </li>
-      ) : (
-        <li className="call__item call__item--time__record">
-          {formattedCallTime}
+          {isPlayerVisible ? (
+            <AudioPlayer
+              audioUrl={audioUrl || ""}
+              onPlayInit={handlePlayInit}
+              onDownloadRecord={handleDownload}
+              formattedCallTime={formattedCallTime}
+              onHidePlayer={() => setIsPlayerVisible(false)}
+            />
+          ) : (
+            <span
+              className="call__item call__item--time__record"
+              onClick={() => setIsPlayerVisible(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setIsPlayerVisible(true);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              style={{ cursor: "pointer", color: "#555" }}
+            >
+              {formattedCallTime}
+            </span>
+          )}
         </li>
+      ) : (
+        <li className="call__item call__item--time__record">{formattedCallTime}</li>
       )}
     </ul>
   );
