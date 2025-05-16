@@ -25,7 +25,7 @@ function CallsTable(): JSX.Element {
   const callsList: Call[] = useSelector((state: RootState) => state.callsList.results);
   const inOut = useSelector((state: RootState) => state.filters.inOut);
   console.log("callsList из Redux:", callsList);
-  
+
   React.useEffect(() => {
     if (!dateStart || !dateEnd) return;
 

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import "./DatePicker.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import type DateRange from "./DateRange";
 
 type DatePickerProps = {
   onDateChange: (startDate: string, endDate: string) => void;
@@ -18,26 +17,27 @@ const PRESET_RANGES = [
 ];
 
 function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
-  const [selectedRange, setSelectedRange] = useState<DateRange>({
-    startDate: null,
-    endDate: null,
-  });
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [customRangeInput, setCustomRangeInput] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [currentPresetIndex, setCurrentPresetIndex] = useState(0);
 
   const setPresetRange = (index: number): void => {
     const { days } = PRESET_RANGES[index];
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - days);
+    const newEndDate = new Date();
+    const newStartDate = new Date();
+    newStartDate.setDate(newEndDate.getDate() - days);
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
 
     console.log("Выбранный диапазон:", startDate, endDate);
 
-    setSelectedRange({ startDate, endDate });
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
     setCurrentPresetIndex(index);
     setCustomRangeInput("");
-    onDateChange(startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]);
+    onDateChange(newStartDate.toISOString().split("T")[0], newEndDate.toISOString().split("T")[0]);
   };
 
   useEffect(() => {
@@ -52,13 +52,15 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
     const isValidDate = (date: string): boolean => /^\d{2}\.\d{2}\.\d{4}$/.test(date);
 
     if (isValidDate(start) && isValidDate(end)) {
-      const startDate = new Date(start.split(".").reverse().join("-"));
-      const endDate = new Date(end.split(".").reverse().join("-"));
+      const parsedStart = new Date(start.split(".").reverse().join("-"));
+      const parsedEnd = new Date(end.split(".").reverse().join("-"));
 
-      setSelectedRange({ startDate, endDate });
-      onDateChange(startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]);
+      setStartDate(parsedStart);
+      setEndDate(parsedEnd);
+      onDateChange(parsedStart.toISOString().split("T")[0], parsedEnd.toISOString().split("T")[0]);
     } else {
-      setSelectedRange({ startDate: null, endDate: null });
+      setStartDate(null);
+      setEndDate(null);
     }
   };
 
@@ -72,16 +74,6 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
 
   return (
     <div>
-      <div style={{ display: "none" }}>
-        {selectedRange.startDate && selectedRange.endDate ? (
-          <p>
-            С {selectedRange.startDate.toLocaleDateString()} по{" "}
-            {selectedRange.endDate.toLocaleDateString()}
-          </p>
-        ) : (
-          <p>Выберите период или укажите даты</p>
-        )}
-      </div>
       <div className="datepiker__slider" style={{ display: "flex", alignItems: "center" }}>
         <button
           className="datepiker__slider__arrow"
@@ -114,33 +106,47 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
       </div>
-      <div className="dropdown">
-        {isDropdownOpen && (
+
+      {isDropdownOpen && (
+        <div className="dropdown">
           <ul>
             {PRESET_RANGES.map((range, index) => (
               <li
                 key={range.label}
+                className={`dropdown__item ${index === currentPresetIndex ? "dropdown__item--active" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => setPresetRange(index)}>
                 {range.label}
               </li>
             ))}
-            <li>
-              <label htmlFor="customRangeInput">
+            <li className="dropdown__item--custom">
+              <label className="dropdown__item__label" htmlFor="customRangeInput">
                 Указать даты:
                 <input
                   id="customRangeInput"
+                  className="dropdown__item__input"
                   type="text"
                   value={customRangeInput}
                   placeholder="__.__.__ - __.__.__"
                   onChange={handleCustomRangeChange}
                 />
+                <span className="dropdown__item__icon">
+                  <svg
+                    className="datepiker__slider__icon"
+                    width="16"
+                    height="18"
+                    viewBox="0 0 16 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.4 1.63636H13.6V0H12V1.63636H4V0H2.4V1.63636H1.6C0.72 1.63636 0 2.37273 0 3.27273V16.3636C0 17.2636 0.72 18 1.6 18H14.4C15.28 18 16 17.2636 16 16.3636V3.27273C16 2.37273 15.28 1.63636 14.4 1.63636ZM14.4 16.3636H1.6V5.72727H14.4V16.3636Z" />
+                  </svg>
+                </span>
               </label>
             </li>
           </ul>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
