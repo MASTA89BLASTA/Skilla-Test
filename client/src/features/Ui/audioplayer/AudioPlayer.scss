@@ -73,25 +73,35 @@
 
 .audio__player__progress::-webkit-slider-thumb {
   appearance: none;
-  width: 12px;
-  height: 12px;
-  background-color: transparent;
-  // background-color: #002cfb;
-  border-radius: 50%;
-  cursor: pointer;
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
 }
 
 .audio__player__progress::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
+}
+
+.audio__player__progress::-ms-thumb {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
+}
+
+.audio__player__progress::-ms-thumb {
   width: 12px;
   height: 12px;
   background-color: #002cfb;
   border-radius: 50%;
   cursor: pointer;
+  border: none;
 }
-
-// .audio__player__download__button {
-//   margin-top: 10px;
-// }
 .audio__player__download__button {
   color: #adbfdf;
 }
