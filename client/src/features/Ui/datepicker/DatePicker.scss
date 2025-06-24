@@ -5,14 +5,14 @@
   cursor: pointer;
 }
 .datepiker__slider__arrow {
-  color: #ADBFDF;
+  color: #adbfdf;
   cursor: pointer;
   border: none;
   background-color: transparent;
 }
 
 .datepiker__slider__arrow:hover {
-  color: #002CFB;
+  color: #002cfb;
 }
 
 .datepiker__slider__calendar {
@@ -22,24 +22,28 @@
 }
 
 .datepiker__slider__icon {
-  fill: #ADBFDF;
+  fill: #adbfdf;
   margin-right: 10px;
   cursor: pointer;
 }
 .datepiker__slider__icon:hover {
-  fill: #002CFB;
+  fill: #002cfb;
+}
+
+.datepiker__container {
+  position: relative;
 }
 
 .dropdown {
   position: absolute;
-  top: 139px;
-  right: 224px;
+  top: 39px;
+  right: 0px;
   width: 204px;
   height: 239px;
   border-radius: 4px;
-  border: 1px solid #EAF0FA;
+  border: 1px solid #eaf0fa;
   background-color: #fff;
-  box-shadow: 0px 4px 8px #E9EDF3CC;
+  box-shadow: 0px 4px 8px #e9edf3cc;
   cursor: pointer;
   font-size: 14px;
   z-index: 1000;
@@ -49,17 +53,17 @@
   height: 40px;
   display: flex;
   align-items: center;
-  color: #899CB1;
+  color: #899cb1;
   padding-left: 20px;
 }
 
 .dropdown__item--active {
-  color: #002CFB;
+  color: #002cfb;
 }
 
 .dropdown__item:hover {
-  background-color: #DEE4FF;
-  color: #2B2D33;
+  background-color: #dee4ff;
+  color: #2b2d33;
 }
 
 .dropdown__item--custom {
@@ -81,28 +85,25 @@
 .dropdown__item__input {
   margin-top: 10px;
   padding-left: 20px;
-  color: #899CB1;
+  color: #899cb1;
   margin-left: 30px;
 }
 
 .dropdown__item__input::placeholder {
-  color: #ADBFDF;
+  color: #adbfdf;
 }
 
 .dropdown__item__icon {
   position: relative;
   left: 100px;
   top: -19px;
-  color: #ADBFDF;
+  color: #adbfdf;
   cursor: pointer;
 }
 .dropdown__item__icon:hover {
-  color: #002CFB;
-
+  color: #002cfb;
 }
-
 
 .datepiker__slider__label {
-  color: #002CFB;
+  color: #002cfb;
 }
-

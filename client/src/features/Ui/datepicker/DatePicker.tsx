@@ -73,7 +73,7 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
   };
 
   return (
-    <div>
+    <div className="datepiker__container">
       <div className="datepiker__slider" style={{ display: "flex", alignItems: "center" }}>
         <button
           className="datepiker__slider__arrow"
