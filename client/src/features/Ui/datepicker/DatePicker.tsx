@@ -44,23 +44,50 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
     setPresetRange(0);
   }, []);
 
+  const formatDateInput = (value: string): string => {
+    const digits = value.replace(/[^\d]/g, "").slice(0, 12); 
+    let result = "";
+
+    for (let i = 0; i < digits.length; i += 1) {
+      if (i === 2 || i === 4 || i === 8 || i === 10) result += ".";
+      if (i === 6) result += " - ";
+      result += digits[i];
+    }
+
+    return result;
+  };
+
   const handleCustomRangeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { value } = e.target;
-    setCustomRangeInput(value);
+    const inputValue = e.target.value;
+    const formatted = formatDateInput(inputValue);
+    setCustomRangeInput(formatted);
 
-    const [start, end] = value.split(" - ");
-    const isValidDate = (date: string): boolean => /^\d{2}\.\d{2}\.\d{4}$/.test(date);
+    const [start, end] = formatted.split(" - ");
+    const isValidShortDate = (date: string): boolean => /^\d{2}\.\d{2}\.\d{2}$/.test(date);
 
-    if (isValidDate(start) && isValidDate(end)) {
-      const parsedStart = new Date(start.split(".").reverse().join("-"));
-      const parsedEnd = new Date(end.split(".").reverse().join("-"));
+    if (isValidShortDate(start) && isValidShortDate(end)) {
+      const expandYear = (yy: string): string => {
+        const year = parseInt(yy, 10);
+        return year < 50 ? `20${yy}` : `19${yy}`;
+      };
 
-      setStartDate(parsedStart);
-      setEndDate(parsedEnd);
-      onDateChange(parsedStart.toISOString().split("T")[0], parsedEnd.toISOString().split("T")[0]);
-    } else {
-      setStartDate(null);
-      setEndDate(null);
+      const [sd, sm, sy] = start.split(".");
+      const [ed, em, ey] = end.split(".");
+
+      // const fullStart = `${sd}.${sm}.${expandYear(sy)}`;
+      // const fullEnd = `${ed}.${em}.${expandYear(ey)}`;
+
+      const parsedStart = new Date(`${expandYear(sy)}-${sm}-${sd}`);
+      const parsedEnd = new Date(`${expandYear(ey)}-${em}-${ed}`);
+
+      if (!Number.isNaN(parsedStart.getTime()) && !Number.isNaN(parsedEnd.getTime())) {
+        setStartDate(parsedStart);
+        setEndDate(parsedEnd);
+        onDateChange(
+          parsedStart.toISOString().split("T")[0],
+          parsedEnd.toISOString().split("T")[0]
+        );
+      }
     }
   };
 
@@ -130,6 +157,7 @@ function DatePicker({ onDateChange }: DatePickerProps): JSX.Element {
                   value={customRangeInput}
                   placeholder="__.__.__ - __.__.__"
                   onChange={handleCustomRangeChange}
+                  maxLength={23}
                 />
                 <span className="dropdown__item__icon">
                   <svg

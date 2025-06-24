@@ -8,12 +8,10 @@
   box-sizing: border-box;
 }
 
-
 ul,
 ol {
   list-style: none;
 }
-
 
 a {
   text-decoration: none;
@@ -34,7 +32,6 @@ img {
   display: block;
 }
 
-
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -50,8 +47,11 @@ textarea {
   outline: none;
   padding: 0;
   resize: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
 }
-
 
 article,
 aside,
